@@ -2,6 +2,13 @@ type: container
 name: axscm-checkout
 description: Checks out commit to /src and export it as an artifact
 
+container:
+  image: get.applatix.io/applatix/axscm:v2.0
+  resources:
+    mem_mib: 256
+    cpu_cores: 0.1
+  command: axscm clone %%repo%% /src --commit %%commit%%
+
 inputs:
   parameters:
     commit:
@@ -12,11 +19,5 @@ inputs:
 outputs:
   artifacts:
     code:
-      path: /dockers
+      path: "/src"
 
-container:
-  image: get.applatix.io/applatix/axscm:v2.0
-  resources:
-    mem_mib: 256
-    cpu_cores: 0.1
-  command: axscm clone %%repo%% /src --commit %%commit%%

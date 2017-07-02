@@ -19,9 +19,12 @@ inputs:
       default: 10 
  
 steps:
-  - checkout:
+  -
+    checkout:
       template: axscm-checkout
-  - build:
+
+  - 
+    build:
       template: heron-build-image-container
       parameters:
         code: "%%steps.checkout.code%%"
@@ -32,6 +35,18 @@ steps:
 type: container
 name: heron-build-image-container
 description: Build the docker image used to build heron
+
+container:
+  # Build a docker image and push it
+  # The docker:1.12 image already has the docker command installed
+  image: docker:1.12
+  resources:
+    cpu_cores: 0.2
+    mem_mib: 1024
+  command: "cd /dockers &&
+              docker login -u %%docker_username%% -p %%docker_password%% &&
+              docker build -f Dockerfile.%%os%% -t streamlio/build:latest-heron-%%os%% . &&
+              docker push streamlio/build:latest-heron-%%os%%"
 
 inputs:
   artifacts:
@@ -49,17 +64,6 @@ inputs:
     docker_password:
       default: "%%secrets.==$1$key=default$text$ANHRCDVvE1OBTJBv4Rdm5+pzpG6wncaUHU8MVte6rgsP9be97/v8+JQdzvz7vWAPXbd0HQP+ail3hr+xy5NZq5zxAWCelcBWwtAiBNSxR86Xomzp24aWE7AT8x4cMXnycIqeJmOtmMj8/Y4zMpVC4W84UTz+vslN85NohbCebg7LsTdEoYlPBFld6Sv5TT4CRiU4+sXOhJ7OE5stFnWFXtccN5oBvv1s2iYuRlWrLzEVFjLMDa/ekKyRhh4ibzP2joTZaCZz8SbGm7E2FjjooKmMeoeBMTZYAj0/hwLkuETdRBjRwbliIS5UujzVK8dk5uB2+71ovYZQSLEnDNaFc+1XTcuyBQNOV7uIBUcWLEi5YpHbzTmp3avSGPfv1JBdeu/U/mytIjixZiAsRZcVZajuqaKdqvRkbvtxcQNpNFi6ig====%%"
 
-container:
-  # Build a docker image and push it
-  # The docker:1.12 image already has the docker command installed
-  image: docker:1.12
-  resources:
-    cpu_cores: 0.2
-    mem_mib: 1024
-  command: "cd /dockers &&
-              docker login -u %%docker_username%% -p %%docker_password%% &&
-              docker build -f Dockerfile.%%os%% -t streamlio/build:latest-heron-%%os%% . &&
-              docker push streamlio/build:latest-heron-%%os%%"
 labels:
     # Enable docker access in this container by specifying the size of graph storage needed and the amount of cpu and memory required for docker commands
     "ax_ea_docker_enable": '{ "graph-storage-name": "sampledockerapp", "graph-storage-size": "10Gi", "cpu_cores":"0.5", "mem_mib":"800"}'

@@ -47,10 +47,9 @@ RUN apt-get install -y npm
 RUN rm -rf hugo_0.15_amd64.deb
 
 # Install Google cloud command line utility
-ENV CLOUD_SDK_REPO "cloud-sdk-$(lsb_release -c -s)"
-RUN echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+RUN echo "deb http://packages.cloud.google.com/apt cloud-sdk-xenial main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-RUN sudo apt-get update && sudo apt-get install google-cloud-sdk
+RUN apt-get update && apt-get -y install google-cloud-sdk
 
 # Install Google Bazel
 RUN wget -O /tmp/bazel.sh https://github.com/bazelbuild/bazel/releases/download/$bazelVersion/bazel-$bazelVersion-installer-linux-x86_64.sh

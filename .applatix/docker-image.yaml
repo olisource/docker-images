@@ -22,7 +22,6 @@ steps:
   -
     checkout:
       template: axscm-checkout
-
   - 
     build:
       template: heron-build-image-container
@@ -45,7 +44,7 @@ container:
     mem_mib: 1024
   command: "cd /dockers &&
               docker login -u %%docker_username%% -p %%docker_password%% &&
-              docker build -f Dockerfile.%%os%% -t streamlio/build:latest-heron-%%os%% . &&
+              docker build -f heron/Dockerfile.%%os%% -t streamlio/build:latest-heron-%%os%% . &&
               docker push streamlio/build:latest-heron-%%os%%"
 
 inputs:
@@ -67,4 +66,3 @@ inputs:
 labels:
     # Enable docker access in this container by specifying the size of graph storage needed and the amount of cpu and memory required for docker commands
     "ax_ea_docker_enable": '{ "graph-storage-name": "sampledockerapp", "graph-storage-size": "10Gi", "cpu_cores":"0.5", "mem_mib":"800"}'
-

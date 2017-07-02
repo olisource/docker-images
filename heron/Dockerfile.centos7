@@ -28,6 +28,9 @@ RUN yum -y install \
       wget \
       which
 
+RUN easy_install pip
+RUN pip install wheel
+
 RUN yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0

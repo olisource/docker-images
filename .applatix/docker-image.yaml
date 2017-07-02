@@ -7,14 +7,6 @@ inputs:
       default: "%%session.commit%%"
     repo:
       default: "%%session.repo%%"
-    version:
-      default: "v1"
-    required_approvals:
-      default: " "
-    optional_approvals:
-      default: " "
-    number_of_optional_approvals_needed:
-      default: 0
     timeout_in_minutes:
       default: 10 
  
@@ -23,11 +15,11 @@ steps:
     checkout:
       template: axscm-checkout
   - 
-    build:
+    heron-build:
       template: heron-build-image-container
       parameters:
         code: "%%steps.checkout.code%%"
-        os: $$[ubuntu14.04,centos7]$$
+        os: $$[ubuntu14.04,ubuntu15.10,ubuntu16.04,centos7]$$
 
 ---
 
@@ -55,7 +47,6 @@ inputs:
   parameters:
     code:
     os:
-    version:
     # Encoded username and password
     docker_username:
       default: "%%secrets.==$1$key=default$text$AIrkE/5KDn6xaSnAaAyvgP/mtUl/TyPzPksAtInSJ8aCpzwh6JhkNRpwNLjiskT1aD8g41X1oOBMqhf22oDzTZ/7QppaN15xcft/xla9OceACpjwK+bw2GPpJNSvOUNqXKzHWVppljuEc6tA3zd2OIfRzpP4Q7NOu3dB4+2QGcOznR+bIzAGHWlFDppJBFOgfHr/6x9VAK9luTT2eYampcg8nyYyJTCF49UgiOC09myfVowJluwNdLQEfnhzKj8If3rPglYWrLMxqlzLre2ymdCiGpv/kx4L7GIlrZ8gltkv54K46v+Ui+ZS7GgaXgfxce6K0sR77/9uZN0dz8VHXYTaT7B/03GYvgKJH7//e3hwD2uCoNkaw/cByxxuclIlb+vGnUUwCwyTs8bsd4vcUbvR7qLr0VfEhI5oc5ZhfLeUnQ====%%"

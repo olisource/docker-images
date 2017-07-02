@@ -57,3 +57,31 @@ inputs:
 labels:
     # Enable docker access in this container by specifying the size of graph storage needed and the amount of cpu and memory required for docker commands
     "ax_ea_docker_enable": '{ "graph-storage-name": "sampledockerapp", "graph-storage-size": "10Gi", "cpu_cores":"0.5", "mem_mib":"800"}'
+
+---
+type: policy
+name: Docker build images policy
+description: Policy to trigger build for all events
+template: docker-image-build
+parameters:
+notifications:
+  -
+    when:
+      - on_success
+      - on_failure
+    whom:
+      - committer
+      - author
+when:
+  -
+    event: on_push
+    target_branches:
+      - ".*"
+  -
+    event: on_pull_request
+    target_branches:
+      - ".*"
+  -
+    event: on_pull_request_merge
+    target_branches:
+      - ".*"

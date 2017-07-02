@@ -53,5 +53,6 @@ RUN apt-get update && apt-get install -y google-cloud-sdk
 # Install Google Bazel
 RUN wget -O /tmp/bazel.sh https://github.com/bazelbuild/bazel/releases/download/$bazelVersion/bazel-$bazelVersion-installer-linux-x86_64.sh
 RUN chmod +x /tmp/bazel.sh && /tmp/bazel.sh
+RUN rm -rf /tmp/bazel.sh
 RUN touch /root/.bazelrc
 RUN bazel version

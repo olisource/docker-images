@@ -1,6 +1,5 @@
 FROM ubuntu:15.10
 
-# This is passed to the heron build command via the --config flag
 ENV TARGET_PLATFORM ubuntu
 ENV bazelVersion 0.3.1
 
@@ -22,27 +21,37 @@ RUN apt-get update && apt-get -y install \
       unzip \
       wget
 
+# Install python pip and wheel
 RUN easy_install pip
 RUN pip install wheel
 
+# Install open jdk
 RUN apt-get -y install openjdk-8-jdk
-
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
+# Install open sdk
 RUN apt-get -y install maven
 
+# Install nodejs
 RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 RUN cd /root/.nvm && chmod +x nvm.sh && cd .. && . /root/.nvm/nvm.sh && nvm install stable && nvm use stable
 
+# Install hugo for website
 RUN wget -q https://github.com/spf13/hugo/releases/download/v0.15/hugo_0.15_amd64.deb
 RUN dpkg -i hugo*.deb
 RUN hugo version
 RUN apt-get install -y nodejs  
 RUN apt-get install -y npm
+RUN rm -rf hugo_0.15_amd64.deb
 
-RUN wget -O /tmp/bazel.sh https://github.com/bazelbuild/bazel/releases/download/$bazelVersion/bazel-$bazelVersion-installer-linux-x86_64.sh \
-      && chmod +x /tmp/bazel.sh \
-      && /tmp/bazel.sh
+# Install Google cloud command line utility
+ENV CLOUD_SDK_REPO "cloud-sdk-$(lsb_release -c -s)"
+RUN echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN sudo apt-get update && sudo apt-get install google-cloud-sdk
 
+# Install Google Bazel
+RUN wget -O /tmp/bazel.sh https://github.com/bazelbuild/bazel/releases/download/$bazelVersion/bazel-$bazelVersion-installer-linux-x86_64.sh
+RUN chmod +x /tmp/bazel.sh && /tmp/bazel.sh
 RUN touch /root/.bazelrc
 RUN bazel version

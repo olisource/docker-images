@@ -1,6 +1,6 @@
 ---
 type: workflow
-name: docker-image-build
+name: docker-image-build-publish
 inputs:
   parameters:
     commit:
@@ -145,7 +145,7 @@ labels:
 type: policy
 name: Docker build images policy
 description: Policy to trigger build for all events
-template: docker-image-build
+template: docker-image-build-publish
 parameters:
     required_approvals: " "
 notifications:
@@ -160,7 +160,7 @@ when:
   -
     event: on_push
     target_branches:
-      - ".*"
+      - "master"
   -
     event: on_pull_request
     target_branches:

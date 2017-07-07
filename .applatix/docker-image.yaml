@@ -162,10 +162,6 @@ when:
     target_branches:
       - "master"
   -
-    event: on_pull_request
-    target_branches:
-      - ".*"
-  -
     event: on_pull_request_merge
     target_branches:
       - ".*"

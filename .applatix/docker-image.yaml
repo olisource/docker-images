@@ -117,13 +117,13 @@ container:
     cpu_cores: 0.2
     mem_mib: 1024
   command: "docker login -u %%docker_username%% -p %%docker_password%% &&
-              docker load -i /docker_image/image &&
+              docker load -i /docker_image &&
               docker push streamlio/build:latest-heron-%%os%%"
 
 inputs:
   artifacts:
   - from: "%%image%%"
-    path: "/docker_image/"
+    path: "/docker_image"
 
   parameters:
     image:

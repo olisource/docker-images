@@ -69,7 +69,6 @@ steps:
         image: "%%steps.centos7-build.image%%"
         os: "centos7"
 
-
 ---
 type: container
 name: build-image-container
@@ -143,7 +142,7 @@ labels:
 
 ---
 type: policy
-name: Docker build images policy
+name: Docker build images and publish policy
 description: Policy to trigger build for all events
 template: docker-image-build-publish
 parameters:

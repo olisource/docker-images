@@ -1,0 +1,59 @@
+---
+type: workflow
+name: docker-image-build
+inputs:
+  parameters:
+    commit:
+      default: "%%session.commit%%"
+    repo:
+      default: "%%session.repo%%"
+    namespace:
+      default: axsys
+    timeout_in_minutes:
+      default: 10
+steps:
+  -
+    checkout:
+      template: axscm-checkout
+  -
+    ubuntu1404-build:
+      template: build-image-container
+      parameters:
+        code: "%%steps.checkout.code%%"
+        os: "ubuntu14.04"
+    ubuntu1510-build:
+      template: build-image-container
+      parameters:
+        code: "%%steps.checkout.code%%"
+        os: "ubuntu15.10"
+    ubuntu1604-build:
+      template: build-image-container
+      parameters:
+        code: "%%steps.checkout.code%%"
+        os: "ubuntu16.04"
+    centos7-build:
+      template: build-image-container
+      parameters:
+        code: "%%steps.checkout.code%%"
+        os: "centos7"
+
+---
+type: policy
+name: Docker build images policy
+description: Policy to trigger build for all events
+template: docker-image-build
+parameters:
+    required_approvals: " "
+notifications:
+  -
+    when:
+      - on_success
+      - on_failure
+    whom:
+      - committer
+      - author
+when:
+  -
+    event: on_pull_request
+    target_branches:
+      - "master"

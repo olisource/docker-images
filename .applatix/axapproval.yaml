@@ -3,7 +3,7 @@ type: container
 name: axapproval
 description: Get approvals
 container:
-  image: get.applatix.io/axapproval:v2.0.3
+  image: get.applatix.io/axapproval:v2.0.4
   resources:
     mem_mib: 128
     cpu_cores: 0.01

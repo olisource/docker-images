@@ -42,8 +42,6 @@ type: policy
 name: Docker build images policy
 description: Policy to trigger build for all events
 template: docker-image-build
-parameters:
-    required_approvals: " "
 notifications:
   -
     when:

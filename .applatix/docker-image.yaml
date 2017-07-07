@@ -146,7 +146,6 @@ name: Docker build images and publish policy
 description: Policy to trigger build for all events
 template: docker-image-build-publish
 parameters:
-    required_approvals: " "
 notifications:
   -
     when:

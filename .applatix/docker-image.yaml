@@ -16,31 +16,31 @@ inputs:
     optional_approvals:
       default: " "
     number_of_optional_approvals_needed:
-      default: "0"
+      default: 0
     timeout_in_minutes:
-      default: "10"
+      default: 10
 steps:
   -
     checkout:
       template: axscm-checkout
   -
-    heron-build-ubuntu1404:
-      template: heron-build-image-container
+    ubuntu1404-build:
+      template: build-image-container
       parameters:
         code: "%%steps.checkout.code%%"
         os: "ubuntu14.04"
-    heron-build-ubuntu1510:
-      template: heron-build-image-container
+    ubuntu1510-build:
+      template: build-image-container
       parameters:
         code: "%%steps.checkout.code%%"
         os: "ubuntu15.10"
-    heron-build-ubuntu1604:
-      template: heron-build-image-container
+    ubuntu1604-build:
+      template: build-image-container
       parameters:
         code: "%%steps.checkout.code%%"
         os: "ubuntu16.04"
-    heron-build-centos7:
-      template: heron-build-image-container
+    centos7-build:
+      template: build-image-container
       parameters:
         code: "%%steps.checkout.code%%"
         os: "centos7"
@@ -48,31 +48,31 @@ steps:
     approval:
       template: axapproval
   -
-    publish-image-ubuntu1404:
-      template: heron-push-image-container
+    ubuntu1404-publish-image:
+      template: push-image-container
       parameters:
-        image: "%%steps.heron-build-ubuntu1404.image%%"
+        image: "%%steps.ubuntu1404-build.image%%"
         os: "ubuntu14.04"
-    publish-image-ubuntu1510:
-      template: heron-push-image-container
+    ubuntu1510-publish-image:
+      template: push-image-container
       parameters:
-        image: "%%steps.heron-build-ubuntu1510.image%%"
+        image: "%%steps.ubuntu1510-build.image%%"
         os: "ubuntu15.10"
-    publish-image-ubuntu1604:
-      template: heron-push-image-container
+    ubuntu1604-publish-image:
+      template: push-image-container
       parameters:
-        image: "%%steps.heron-build-ubuntu1604.image%%"
+        image: "%%steps.ubuntu1604-build.image%%"
         os: "ubuntu16.04"
-    publish-image-centos7:
-      template: heron-push-image-container
+    centos7-publish-image:
+      template: push-image-container
       parameters:
-        image: "%%steps.heron-build-centos7.image%%"
+        image: "%%steps.centos7-build.image%%"
         os: "centos7"
 
 
 ---
 type: container
-name: heron-build-image-container
+name: build-image-container
 description: Build the docker image used to build heron
 
 container:
@@ -83,7 +83,6 @@ container:
     cpu_cores: 0.2
     mem_mib: 1024
   command: "cd /dockers &&
-              docker login -u %%docker_username%% -p %%docker_password%% &&
               docker build -f heron/Dockerfile.%%os%% -t streamlio/build:latest-heron-%%os%% . &&
               docker save -o /image streamlio/build:latest-heron-%%os%%"
 
@@ -95,12 +94,6 @@ inputs:
   parameters:
     code:
     os:
-    # Encoded username and password
-    docker_username:
-      default: "%%secrets.==$1$key=default$text$AIrkE/5KDn6xaSnAaAyvgP/mtUl/TyPzPksAtInSJ8aCpzwh6JhkNRpwNLjiskT1aD8g41X1oOBMqhf22oDzTZ/7QppaN15xcft/xla9OceACpjwK+bw2GPpJNSvOUNqXKzHWVppljuEc6tA3zd2OIfRzpP4Q7NOu3dB4+2QGcOznR+bIzAGHWlFDppJBFOgfHr/6x9VAK9luTT2eYampcg8nyYyJTCF49UgiOC09myfVowJluwNdLQEfnhzKj8If3rPglYWrLMxqlzLre2ymdCiGpv/kx4L7GIlrZ8gltkv54K46v+Ui+ZS7GgaXgfxce6K0sR77/9uZN0dz8VHXYTaT7B/03GYvgKJH7//e3hwD2uCoNkaw/cByxxuclIlb+vGnUUwCwyTs8bsd4vcUbvR7qLr0VfEhI5oc5ZhfLeUnQ====%%"
-
-    docker_password:
-      default: "%%secrets.==$1$key=default$text$ANHRCDVvE1OBTJBv4Rdm5+pzpG6wncaUHU8MVte6rgsP9be97/v8+JQdzvz7vWAPXbd0HQP+ail3hr+xy5NZq5zxAWCelcBWwtAiBNSxR86Xomzp24aWE7AT8x4cMXnycIqeJmOtmMj8/Y4zMpVC4W84UTz+vslN85NohbCebg7LsTdEoYlPBFld6Sv5TT4CRiU4+sXOhJ7OE5stFnWFXtccN5oBvv1s2iYuRlWrLzEVFjLMDa/ekKyRhh4ibzP2joTZaCZz8SbGm7E2FjjooKmMeoeBMTZYAj0/hwLkuETdRBjRwbliIS5UujzVK8dk5uB2+71ovYZQSLEnDNaFc+1XTcuyBQNOV7uIBUcWLEi5YpHbzTmp3avSGPfv1JBdeu/U/mytIjixZiAsRZcVZajuqaKdqvRkbvtxcQNpNFi6ig====%%"
 
 outputs:
   artifacts:
@@ -111,13 +104,9 @@ labels:
     # Enable docker access in this container by specifying the size of graph storage needed and the amount of cpu and memory required for docker commands
     "ax_ea_docker_enable": '{ "graph-storage-name": "sampledockerapp", "graph-storage-size": "10Gi", "cpu_cores":"0.5", "mem_mib":"800"}'
 
-
-
-
-
 ---
 type: container
-name: heron-push-image-container
+name: push-image-container
 description: Push the docker image used to build heron
 
 container:
@@ -149,10 +138,6 @@ inputs:
 labels:
     # Enable docker access in this container by specifying the size of graph storage needed and the amount of cpu and memory required for docker commands
     "ax_ea_docker_enable": '{ "graph-storage-name": "sampledockerapp", "graph-storage-size": "10Gi", "cpu_cores":"0.5", "mem_mib":"800"}'
-
-
-
-
 
 
 ---

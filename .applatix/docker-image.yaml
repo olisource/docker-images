@@ -83,8 +83,8 @@ container:
     cpu_cores: 0.2
     mem_mib: 1024
   command: "cd /dockers &&
-              docker build -f heron/Dockerfile.%%os%% -t streamlio/build:latest-heron-%%os%% . &&
-              docker save -o build-%%os%%.tar streamlio/build:latest-heron-%%os%%"
+              docker build -f heron/Dockerfile.%%os%% -t streamlio/build-%%os%%:latest . &&
+              docker save -o build-%%os%%.tar streamlio/build-%%os%%:latest"
 
 inputs:
   artifacts:
@@ -116,15 +116,15 @@ container:
   resources:
     cpu_cores: 0.2
     mem_mib: 1024
-  command: "cd /docker_image &&
+  command: "cd /dockers && ls -lt . &&
               docker login -u %%docker_username%% -p %%docker_password%% &&
               docker load -i build-%%os%%.tar &&
-              docker push streamlio/build:latest-heron-%%os%%"
+              docker push streamlio/build-%%os%%:latest"
 
 inputs:
   artifacts:
   - from: "%%image%%"
-    path: "/docker_image"
+    path: "/dockers"
 
   parameters:
     image:

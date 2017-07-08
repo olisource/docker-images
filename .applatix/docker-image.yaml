@@ -18,7 +18,7 @@ inputs:
     number_of_optional_approvals_needed:
       default: 1
     timeout_in_minutes:
-      default: 60
+      default: 30
 steps:
   -
     checkout:

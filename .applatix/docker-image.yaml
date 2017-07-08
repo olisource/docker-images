@@ -12,11 +12,11 @@ inputs:
     version:
       default: staging
     required_approvals:
-      default: "kramasamy@gmail.com"
-    optional_approvals:
       default: " "
+    optional_approvals:
+      default: "kramasamy@gmail.com,chris@streaml.io"
     number_of_optional_approvals_needed:
-      default: 0
+      default: 1
     timeout_in_minutes:
       default: 60
 steps:
